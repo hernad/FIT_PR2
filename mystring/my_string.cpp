@@ -181,7 +181,7 @@ void MyString::get(istream& c, char test) {
 	}
 }
 
-// ovdje sam se puno zadrûao - stajalo je const Mystring ca ... bez &
+// ovdje sam se puno zadr≈æao - stajalo je const Mystring ca ... bez &
 // kompajler mi to nije prijavio nego je rekao da je ca.st inaccessible
 ostream& operator<<  ( ostream& c, const MyString& ca) {
 	c << ca.st;
