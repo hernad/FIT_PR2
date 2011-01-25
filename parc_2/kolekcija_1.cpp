@@ -5,8 +5,7 @@
 using namespace std;
 
 int dbg(string f_name, string str) {
-   cout << "----" << f_name << "----" << endl;
-   cout << str << endl;
+   cout << "----" << f_name << " / " << str << endl;
 };
 
 
@@ -103,9 +102,9 @@ T &Kolekcija<T, max>::operator[] (int i)
 template<class T, int max>
 ostream& operator<<(ostream &o_s, const Kolekcija<T,max> &kol) 
 {
-   dbg("friend kolekcija", "operator<<"); 
+   dbg("friend kolekcija", "operator<< - ispis kolekcije"); 
    for(int i=0; i < kol.size; i++) {
-        o_s << kol.items[i] << endl;
+        o_s << i << " : " << kol.items[i] << endl;
    } 
    return o_s;
 }
@@ -115,7 +114,21 @@ template<class T, int max>
 void Kolekcija<T, max>::add_item(const T &item)
 {
   dbg("kolekcija", "add_item");
-  
+ 
+  if (capacity == size) {
+     // prosiri kapacitet
+     capacity += 5;
+     T *temp = new T[capacity];
+     dbg("kolekcija", "prosirujem capacity +5");
+     // napuni temp sa items
+     for(int i=0; i<size; i++)
+       temp[i] = items[i];
+
+     delete[] items;
+     items = temp;
+     // ponovo imamo dovoljno prostora
+  }
+ 
   this->items[size++] = item;
   return;
 }
@@ -141,5 +154,9 @@ int main()
         cout << k1[0] << endl;
         cout << k1[1] << endl;
 
+        for(int i=0; i<20; i++)
+           k1 += i+1;
+
+        cout << k1;
 	return 0;
 }
