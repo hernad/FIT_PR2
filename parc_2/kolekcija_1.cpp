@@ -8,6 +8,8 @@
 
 #define DEBUG 1
 
+#undef DEBUG
+
 using namespace std;
 
 int dbg(string f_name, string str) {
@@ -29,8 +31,21 @@ public:
 
    Osoba(const char *ip);
    ~Osoba();
-   const char *get_imePrezime() {  return imePrezime; }
-   Osoba &operator= (Osoba &o);
+   // bez ovog const-a ne ide !
+   // zato sto se dole u operator= mora
+   // proslijediti parametar const Osoba &o
+   char *get_imePrezime() const {  
+          return imePrezime; 
+   }
+
+   // problem je bio u const !
+   Osoba &operator= (const Osoba &o);
+   //kolekcija_1.cpp:233: error: no match for ‘operator=’ in ‘*(((Kolekcija<Osoba, 10>*)this)->Kolekcija<Osoba, 10>::items + ((long unsigned int)(((long unsigned int)(((Kolekcija<Osoba, 10>*)this)->Kolekcija<Osoba, 10>::size ++)) * 8ul))) = item’
+   //kolekcija_1.cpp:99: note: candidates are: Osoba& Osoba::operator=(Osoba&)
+
+   // problem je bio u const !
+
+   //Osoba *operator= (Osoba *o);
 
    //u operator<< nisam stavio parametar po referenci ma sam imao
    // problem zato sto nemam konstruktor kopije
@@ -96,13 +111,23 @@ ostream& operator<< (ostream &o_strm, Osoba o) {
   return o_strm;
 }
 
-Osoba& Osoba::operator= (Osoba &o) {
+Osoba& Osoba::operator= (const Osoba &o) {
    dbg("osoba", "operator=");
-   strcpy(this->imePrezime, o.get_imePrezime());
+   char* ip= o.get_imePrezime();
+   delete [] imePrezime;
+   imePrezime = new char[strlen(ip)+1];
+   strcpy(this->imePrezime, ip); 
 }
 
+/*
+Osoba* Osoba::operator= (Osoba *o) {
 
+   dbg("osoba", "operator= za pointere");
 
+   return & this->operator= (*o);
+
+}
+*/
 
 //----------------------------------------------------
 
@@ -227,7 +252,7 @@ void Kolekcija<T, max>::add_item(const T &item)
      // ponovo imamo dovoljno prostora
   }
  
-  this->items[size++] = item;
+  items[size++] = item;
   return;
 }
 
@@ -257,13 +282,29 @@ int main()
 
         cout << k1;
 
-        //Kolekcija<Osoba, 10> k2;
-        //k2 += o;
+        Kolekcija<Osoba, 10> k2;
 
         //const char *c_str_1 = "ernad husremovic";
-       
+      
         Osoba o("errrr rrrr"); 
         cout << o << endl;
 
-	return 0;
+        k2 += o;
+        k2 += *(new Osoba("fljas fljas"));
+
+        for(int i=0; i<20; i++) {
+           stringstream ss;
+           ss << "dodajem" << i+1;
+           int l_str = ss.str().length();
+           char *ip = new char[l_str+1];
+           ss.str().copy(ip, l_str, 0);
+           ip[l_str] = '\0';
+           k2 += ip;
+           // vise ovo ne trebam
+           delete [] ip;
+        }
+                              	
+        dbg("main", "=========== ispis k2 kolekcije =============="); 
+        cout << k2 << endl;
+        return 0;
 }
