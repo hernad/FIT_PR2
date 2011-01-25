@@ -22,6 +22,10 @@ int dbg(string f_name, string str) {
 class KucniLjubimac {
 public:
    virtual void OglasiSe() = 0;
+
+   virtual ~KucniLjubimac() {
+        dbg("kljub", "destruktor");
+   }
 };
 
 
@@ -30,6 +34,11 @@ public:
    void OglasiSe() { 
          dbg("pas", "pas oglasavanje"); 
    }
+
+   virtual ~Pas() {
+        dbg("pas", "destruktor");
+   }
+
 
 };
 
@@ -44,12 +53,21 @@ public:
 
    }
 
+   virtual ~Macka() {
+        dbg("macka", "destruktor");
+   }
+
 };
 
 class Vucjak: public Pas {
    void OglasiSe() { 
         dbg("vucjak", "ja sam vucjak");
    }
+
+   virtual ~Vucjak() {
+        dbg("vucjak", "destruktor");
+   }
+
 
 };
 
