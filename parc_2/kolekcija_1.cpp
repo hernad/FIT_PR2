@@ -1,12 +1,73 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
+
+// strlen
+#include <string.h>
+
+#define DEBUG 1
 
 using namespace std;
 
 int dbg(string f_name, string str) {
+
+#ifdef DEBUG
    cout << "----" << f_name << " / " << str << endl;
+#endif
+
 };
+
+class Osoba {
+
+private:
+   char *imePrezime;
+
+public:
+   Osoba(char *ip);
+   ~Osoba();
+   const char *get_imePrezime() {  return imePrezime; }
+   Osoba &operator= (Osoba &o);
+
+   friend ostream& operator<< (ostream &o_strm, Osoba o);
+
+};
+
+Osoba::Osoba(char *ip = "hernad") {
+
+  stringstream s1;
+  s1 << "konstruktor =" << ip;
+
+  dbg("osoba", s1.str());
+
+  imePrezime = new char[strlen(ip) + 1];
+  imePrezime = ip;
+
+}
+
+Osoba::~Osoba() {
+  dbg("osoba", "destruktor");
+  delete [] imePrezime;
+  imePrezime = NULL;
+}
+
+ostream& operator<< (ostream &o_strm, Osoba o) {
+
+  dbg("osoba", "<<");
+  o_strm << o.get_imePrezime();
+
+  return o_strm;
+}
+
+Osoba& Osoba::operator= (Osoba &o) {
+   dbg("osoba", "operator=");
+   strcpy(this->imePrezime, o.get_imePrezime());
+}
+
+
+
+
+//----------------------------------------------------
 
 
 template<class T = int, int max = 10>
@@ -154,9 +215,18 @@ int main()
         cout << k1[0] << endl;
         cout << k1[1] << endl;
 
-        for(int i=0; i<20; i++)
-           k1 += i+1;
+        //for(int i=0; i<20; i++)
+        //   k1 += i+1;
 
         cout << k1;
+
+        //Kolekcija<Osoba, 10> k2;
+
+        //char *c_str_1 = "hernad";
+       
+        Osoba o("ernad husremovic"); 
+        //k2 += o;
+        cout << o << endl;
+
 	return 0;
 }
