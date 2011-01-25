@@ -3,52 +3,67 @@
 
 using namespace std;
 
-template<class T = int, int max>
+int dbg(string f_name, string str) {
+   cout << "----" << f_name << "----" << endl;
+   cout << str << endl;
+};
+
+
+
+template<class T = int, int max = 10>
 class Kolekcija {
 
 private:
    T *item;
-   int item;
    int size;
    int capacity;
 
 public:
    Kolekcija();
    ~Kolekcija();
-   add_item();
-   
-friend:
-    ostream& operator<< <> (ostream &o_str, const Kolekcija<T, m> &kol); 
-}
+   //void add_item();
+   //void delete_item();
 
-template<class T = int, int max = 10>
-Kolekcija::Kolekcija()
+   // nije friend: ... !
+   friend ostream & operator<< <> (ostream &o_s, const Kolekcija<T, max> &kol); 
+};
+
+
+//kolekcija_1.cpp:24: error: expected unqualified-id before ‘template’ 
+// klasu zavrsiti sa ";"
+
+
+//kolekcija_1.cpp:32: error: default template arguments may not be used in function templates without -std=c++0x or -std=gnu++0x
+
+// defaultni template argumenti ne mogu biti koristeni kod implementacije!
+template<class T, int max>
+//error: ‘template<class T, int max> class Kolekcija’ used without template parameters 
+// genericka klasa mora imati parametre kod svake definicije tipa !!! 
+Kolekcija<T, max>::Kolekcija()
 {
   dbg("kolekcija", "konstruktor");
-  capacity = m;
+  capacity = max;
   size = 0;
 }
 
-template<class T = int, int max>
-Kolekcija::~Kolekcija()
+template<class T, int max>
+Kolekcija<T, max>::~Kolekcija()
 {
   dbg("kolekcija", "destruktor");
 
 }
 
-template<class T = int, int max>
-ostream& operator<< <> (ostream &o_str, const Kolekcija<T, m> &kol); 
+//kolekcija_1.cpp:20: error: expected primary-expression before ‘&’ token
+//kolekcija_1.cpp:20: error: ‘operator<< <>’ cannot appear in a constant-expression
+
+template<class T, int max>
+ostream& operator<< (ostream &o_s, const Kolekcija<T, max> &kol) 
 {
    dbg("friend kolekcija", "operator<<"); 
-   for(int i=0; i<size; i++) {
-        o_str << kol[i];
+   for(int i=0; i < kol.size; i++) {
+        o_s << kol[i];
    } 
-   return o_str;
-}
-
-int dbg(string f_name, string str) {
-   cout << "----" << f_name << "----" << endl;
-   cout << str << endl;
+   return o_s;
 }
 
 int main()
