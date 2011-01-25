@@ -35,7 +35,7 @@ public:
          dbg("pas", "pas oglasavanje"); 
    }
 
-   virtual ~Pas() {
+   ~Pas() {
         dbg("pas", "destruktor");
    }
 
@@ -53,18 +53,20 @@ public:
 
    }
 
-   virtual ~Macka() {
+   ~Macka() {
         dbg("macka", "destruktor");
    }
 
 };
 
 class Vucjak: public Pas {
+
+public:
    void OglasiSe() { 
         dbg("vucjak", "ja sam vucjak");
    }
 
-   virtual ~Vucjak() {
+   ~Vucjak() {
         dbg("vucjak", "destruktor");
    }
 
@@ -98,7 +100,12 @@ int main() {
 
    Vucjak *v1 = new Vucjak();
 
-   f_1(*v1); 
+   f_1(*v1);
+
+   delete m1;
+ 
+   delete v1;
+ 
    return 0;
 }
 
