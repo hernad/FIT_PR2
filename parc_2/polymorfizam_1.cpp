@@ -39,6 +39,11 @@ public:
         dbg("macka", "MAC MAC oglasavanje");
    }
 
+   void Predi() {
+        dbg("macka", "ja znam i presti: PPPPPPPPPPprrrrrrrrrrrrrrrrr");
+
+   }
+
 };
 
 class Vucjak: public Pas {
@@ -53,6 +58,13 @@ class Vucjak: public Pas {
 int f_1 (KucniLjubimac &klj) {
 
    klj.OglasiSe();
+
+   Macka *m;
+   m = dynamic_cast<Macka *>(&klj);
+   if (m != NULL) {
+       m->Predi();
+
+   }
 }
 
 int main() {
