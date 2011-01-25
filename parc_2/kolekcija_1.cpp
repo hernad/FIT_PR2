@@ -24,31 +24,68 @@ private:
    char *imePrezime;
 
 public:
-   Osoba(char *ip);
+
+   void cp_prezimeIme(const char *ip);
+
+   Osoba(const char *ip);
    ~Osoba();
    const char *get_imePrezime() {  return imePrezime; }
    Osoba &operator= (Osoba &o);
+
+   //u operator<< nisam stavio parametar po referenci ma sam imao
+   // problem zato sto nemam konstruktor kopije
+   // uocio sam to tako sto sam imao dva destruktor poziva
+   Osoba(Osoba &o);
 
    friend ostream& operator<< (ostream &o_strm, Osoba o);
 
 };
 
-Osoba::Osoba(char *ip = "hernad") {
 
-  stringstream s1;
-  s1 << "konstruktor =" << ip;
-
-  dbg("osoba", s1.str());
+void Osoba::cp_prezimeIme(const char *ip) {
 
   imePrezime = new char[strlen(ip) + 1];
-  imePrezime = ip;
+  //imePrezime = ip - papak jedan strcpy
+  strcpy(imePrezime, ip);
+  imePrezime[strlen(ip)+1] = '\0';
+}
 
+Osoba::Osoba(const char *ip = "hernad") {
+
+#ifdef DEBUG
+  stringstream s1;
+  s1 << "konstruktor =" << ip;
+  dbg("osoba", s1.str());
+
+#endif
+  cp_prezimeIme(ip);
+}
+
+Osoba::Osoba(Osoba &o) {
+
+  const char *ip = o.get_imePrezime();
+#ifdef DEBUG
+  stringstream s1;
+  s1 << "konstruktor kopije = " << ip;
+
+  dbg("osoba", s1.str());
+#endif
+
+  cp_prezimeIme(ip);
 }
 
 Osoba::~Osoba() {
-  dbg("osoba", "destruktor");
+
+#ifdef DEBUG
+  stringstream s1;
+  s1 << "destruktor = " << imePrezime;
+
+  dbg("osoba", s1.str());
+#endif
+
   delete [] imePrezime;
   imePrezime = NULL;
+
 }
 
 ostream& operator<< (ostream &o_strm, Osoba o) {
@@ -221,11 +258,11 @@ int main()
         cout << k1;
 
         //Kolekcija<Osoba, 10> k2;
-
-        //char *c_str_1 = "hernad";
-       
-        Osoba o("ernad husremovic"); 
         //k2 += o;
+
+        //const char *c_str_1 = "ernad husremovic";
+       
+        Osoba o("errrr rrrr"); 
         cout << o << endl;
 
 	return 0;
